@@ -1,12 +1,12 @@
 [Unit]
 Before=initrd-root-fs.target
-After=run-rootfs.mount
-Requires=run-rootfs.mount
-After=modprobe@overlay.service
-Requires=modprobe@overlay.service
+
+After=rootfs-nbd.service modprobe@erofs.service
+Requires=rootfs-nbd.service modprobe@erofs.service
+
+DefaultDependencies=no
 
 [Mount]
-What=live
+What=/dev/nbd0
 Where=/sysroot
-Options=lowerdir=/run/rootfs,upperdir=/run/live-rw,workdir=/run/live-work
-Type=overlay
+Type=erofs
