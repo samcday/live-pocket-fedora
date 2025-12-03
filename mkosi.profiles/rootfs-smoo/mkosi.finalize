@@ -1,0 +1,21 @@
+#!/bin/bash
+set -euxo pipefail
+
+: "${SRCDIR:?}"
+: "${BUILDROOT:?}"
+
+OUT="${OUTPUTDIR:-${SRCDIR}/mkosi.output}"
+mkdir -p "${OUT}"
+
+ROOTFS_IMG="${OUT}/rootfs-gpt.img"
+SIZE_BYTES="${SMOO_ROOTFS_SIZE:-2147483648}" # default 2GiB; override if your rootfs is larger
+REPART_DEFS="${SRCDIR}/mkosi.profiles/rootfs-smoo/repart.d"
+
+systemd-repart \
+    --offline=yes \
+    --root="${BUILDROOT}" \
+    --definitions="${REPART_DEFS}" \
+    --empty=create \
+    --size="${SIZE_BYTES}" \
+    --discard=no \
+    --image="${ROOTFS_IMG}"

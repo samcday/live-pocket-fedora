@@ -1,0 +1,14 @@
+[Unit]
+Description=Mount smoo-provided rootfs
+After=smoo-gadget.service systemd-udevd.service
+Requires=smoo-gadget.service
+Wants=systemd-udevd.service
+Before=initrd-root-fs.target
+DefaultDependencies=no
+JobTimeoutSec=0
+
+[Mount]
+What=/dev/disk/by-partlabel/rootfs
+Where=/sysroot
+Type=auto
+Options=defaults

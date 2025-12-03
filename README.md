@@ -35,5 +35,12 @@ fastboot stage /path/to/mkosi.output/image.efi
 fastboot oem run:'bootefi ${fastboot_addr_r}:${filesize}'
 ```
 
+[rootfs-smoo profile](mkosi.profiles/rootfs-smoo/) builds the initrd with the locally checked out
+[smoo](smoo/) gadget. The device starts `smoo-gadget` in the initrd and will mount `/sysroot` from
+`/dev/disk/by-partlabel/rootfs`, so hand `smoo-host-cli --file` a GPT image whose root partition is
+labelled `rootfs` (e.g. `sgdisk -n1:0:+2G -t1:8300 -c1:rootfs rootfs.img`).
+When building with `mkosi -p rootfs-smoo` a ready-to-serve image is emitted at
+`mkosi.output/rootfs-gpt.img`; it’s a GPT disk with a single `rootfs` partition formatted erofs.
+
 [mkosi]: https://github.com/systemd/mkosi
 [my U-Boot tree]: https://github.com/samcday/u-boot
