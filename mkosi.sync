@@ -1,0 +1,17 @@
+#!/bin/bash
+set -ueo pipefail
+
+SRCDIR="${SRCDIR:-$PWD}"
+
+if [[ "${PROFILES:-}" == *"embedded-firmware"* ]]; then
+    if [[ -d "${SRCDIR}/firmware-oneplus-sdm845/lib/firmware" ]]; then
+        exit 0
+    fi
+
+    firmware_dir="${SRCDIR}/mkosi.cache/firmware-oneplus-sdm845"
+
+    if [[ ! -d "${firmware_dir}/lib/firmware" ]]; then
+        mkdir -p "${SRCDIR}/mkosi.cache"
+        git clone --depth 1 https://gitlab.com/sdm845-mainline/firmware-oneplus-sdm845 "${firmware_dir}"
+    fi
+fi
