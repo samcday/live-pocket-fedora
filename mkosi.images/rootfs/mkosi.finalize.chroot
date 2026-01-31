@@ -38,5 +38,3 @@ fi
 groupadd -g 1000 user && \
     useradd -g 1000 -G wheel -m -u 1000 user && \
     echo 'user:147147' | chpasswd
-
-rm -rf /boot/fedora
