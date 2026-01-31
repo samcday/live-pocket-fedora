@@ -1,8 +1,6 @@
 #!/bin/bash
 set -uexo pipefail
 
-[[ -f $OUTPUTDIR/rootfs.ero ]] && exit
-
 compress=
 
 if [[ "${PROFILES:-}" == *"erofs-lzma"* ]]; then
@@ -24,6 +22,8 @@ extraopts=""
 
 time mkfs.erofs -C 1048576 $extraopts \
     $compress \
-    $OUTPUTDIR/rootfs.ero $OUTPUTDIR/rootfs/
+    $OUTPUTDIR/image.ero $OUTPUTDIR/image/
 
-du -hs $OUTPUTDIR/rootfs.ero
+
+du -hs $OUTPUTDIR/image
+du -hs $OUTPUTDIR/image.ero

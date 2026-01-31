@@ -18,10 +18,10 @@ jobs:
 
       - name: Build image
         run: |
-          mkosi -f --profile phosh,erofs-lz4,rootfs-embedded
+          mkosi -f --profile erofs-lzma,phosh,official-kernel,embedded-firmware
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: sdm845-live-fedora
-          path: ./mkosi.output/image.efi
+          path: ./mkosi.output/image.ero
