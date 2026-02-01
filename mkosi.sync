@@ -3,18 +3,8 @@ set -ueo pipefail
 
 SRCDIR="${SRCDIR:-$PWD}"
 
-selected_profiles=0
-if [[ "${PROFILES:-}" == *"embedded-firmware"* ]]; then
-    selected_profiles=$((selected_profiles + 1))
-fi
-if [[ "${PROFILES:-}" == *"sdm845-fwload"* ]]; then
-    selected_profiles=$((selected_profiles + 1))
-fi
-if [[ "${PROFILES:-}" == *"droid-juicer"* ]]; then
-    selected_profiles=$((selected_profiles + 1))
-fi
-if [[ ${selected_profiles} -gt 1 ]]; then
-    echo "Profiles embedded-firmware, sdm845-fwload, and droid-juicer are mutually exclusive." >&2
+if [[ "${PROFILES:-}" == *"droid-juicer"* ]] && [[ "${PROFILES:-}" == *"embedded-firmware"* ]]; then
+    echo "Profiles embedded-firmware and droid-juicer are mutually exclusive." >&2
     exit 1
 fi
 
