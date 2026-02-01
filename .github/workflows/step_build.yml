@@ -18,7 +18,7 @@ jobs:
 
       - name: Build image
         run: |
-          sudo mkosi -f --profile erofs-lz4,phosh,official-kernel,embedded-firmware
+          sudo mkosi -f --profile erofs-lz4,phosh,embedded-firmware
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
