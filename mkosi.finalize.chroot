@@ -1,6 +1,13 @@
 #!/bin/bash
 set -uexo pipefail
 
+if [[ "${PROFILES:-}" == *"precompile-akmods"* ]]; then
+    mkdir -p /tmp /var/tmp
+    chmod 1777 /tmp /var/tmp
+    export TMPDIR=/var/tmp
+    akmods --force --kernels $(ls /usr/lib/modules/)
+fi
+
 if [[ "${PROFILES:-}" == *"embedded-firmware"* ]]; then
     firmware_repo=""
 
