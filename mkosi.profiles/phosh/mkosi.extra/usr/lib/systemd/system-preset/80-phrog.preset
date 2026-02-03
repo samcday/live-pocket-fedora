@@ -1,0 +1,2 @@
+enable phrog.service
+disable greetd.service
