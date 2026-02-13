@@ -1,7 +1,9 @@
-# sdm845-live-fedora
+# live-pocket-fedora
 
 Some [mkosi][] configs to prepare an image that is suitable to live boot on
-SDM845 devices, using [smoo][] + [fastboop][].
+pocket computers, using [smoo][] + [fastboop][].
+
+This serves as a testbed for stuff I hope to upstream in Fedora.
 
 [mkosi]: https://github.com/systemd/mkosi
 [smoo]: https://github.com/samcday/smoo
