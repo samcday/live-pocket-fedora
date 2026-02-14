@@ -21,6 +21,29 @@ jobs:
     name: 🔨 build
     uses: ./.github/workflows/step_build.yml
 
+  upload-ero:
+    name: ☁️ upload .ero
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: live-pocket-fedora
+          path: mkosi.output/
+
+      - name: Upload image.ero to R2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          R2_ENDPOINT_URL: ${{ secrets.R2_ENDPOINT_URL }}
+        run: |
+          stamp="$(date -u +%Y%m%d)"
+          object_key="/live-pocket-fedora/${stamp}.ero"
+          aws s3 cp "mkosi.output/image.ero" "s3://${R2_BUCKET}${object_key}" --endpoint-url "${R2_ENDPOINT_URL}"
+
   pass:
     name: ✅ Pass
     needs: [ build ]
