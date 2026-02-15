@@ -10,12 +10,6 @@ variable "r2_bucket_name" {
   default     = "fastboop-bleeding"
 }
 
-variable "r2_bucket_item_write_permission_group_id" {
-  type        = string
-  description = "Cloudflare permission group ID for Workers R2 Storage Bucket Item Write."
-  default     = "6a018a9f2fc74eb6b293b0c548f38b39"
-}
-
 variable "github_owner" {
   type        = string
   description = "GitHub repository owner."

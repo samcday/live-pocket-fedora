@@ -5,7 +5,19 @@ provider "github" {
   owner = var.github_owner
 }
 
+data "cloudflare_api_token_permission_groups_list" "r2_bucket_item_write" {
+  name = "Workers R2 Storage Bucket Item Write"
+}
+
+data "cloudflare_api_token_permission_groups_list" "r2_storage_write" {
+  name = "Workers R2 Storage Write"
+}
+
 locals {
+  r2_bucket_item_write_permission_group_id = coalesce(
+    try(one(data.cloudflare_api_token_permission_groups_list.r2_bucket_item_write.result).id, null),
+    try(one(data.cloudflare_api_token_permission_groups_list.r2_storage_write.result).id, null)
+  )
   r2_bucket_resource = "com.cloudflare.edge.r2.bucket.${var.account_id}_default_${var.r2_bucket_name}"
 }
 
@@ -14,15 +26,15 @@ resource "cloudflare_api_token" "live_pocket_fedora_upload" {
 
   lifecycle {
     precondition {
-      condition     = length(var.r2_bucket_item_write_permission_group_id) > 0
-      error_message = "r2_bucket_item_write_permission_group_id must be non-empty."
+      condition     = local.r2_bucket_item_write_permission_group_id != null
+      error_message = "Could not resolve an R2 write permission group from Cloudflare."
     }
   }
 
   policies = [{
     effect = "allow"
     permission_groups = [{
-      id = var.r2_bucket_item_write_permission_group_id
+      id = local.r2_bucket_item_write_permission_group_id
     }]
     resources = jsonencode({
       (local.r2_bucket_resource) = "*"
