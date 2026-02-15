@@ -51,7 +51,7 @@ jobs:
 
   pass:
     name: ✅ Pass
-    needs: [ build, upload-ero ]
+    needs: [ build ]
     runs-on: ubuntu-latest
     steps:
       - uses: re-actors/alls-green@release/v1
