@@ -4,9 +4,12 @@ set -eu
 generator_dir="${1:?missing generator dir}"
 persist_device="/dev/disk/by-partlabel/persist"
 
-if [[ ! -e "${persist_device}" ]]; then
-    exit 0
-fi
+link_mount_to_local_fs() {
+    local unit_name="${1:?missing unit name}"
+    local requires_dir="${generator_dir}/local-fs.target.requires"
+    mkdir -p "${requires_dir}"
+    ln -fs "../${unit_name}" "${requires_dir}/${unit_name}"
+}
 
 # Create tmpfiles.d configuration for required directories
 tmpfiles_dir="/run/tmpfiles.d"
@@ -34,6 +37,7 @@ Where=/var/lib/persist
 Type=ext4
 Options=defaults,noatime
 EOF
+link_mount_to_local_fs "var-lib-persist.mount"
 
 nm_unit_name="$(systemd-escape --path --suffix=mount /etc/NetworkManager/system-connections)"
 nm_unit_path="${generator_dir}/${nm_unit_name}"
@@ -51,6 +55,7 @@ Where=/etc/NetworkManager/system-connections
 Type=none
 Options=bind
 EOF
+link_mount_to_local_fs "${nm_unit_name}"
 
 bt_unit_name="$(systemd-escape --path --suffix=mount /var/lib/bluetooth)"
 bt_unit_path="${generator_dir}/${bt_unit_name}"
@@ -68,3 +73,4 @@ Where=/var/lib/bluetooth
 Type=none
 Options=bind
 EOF
+link_mount_to_local_fs "${bt_unit_name}"
