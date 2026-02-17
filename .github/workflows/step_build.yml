@@ -18,10 +18,16 @@ jobs:
 
       - name: Build image
         run: |
-          sudo mkosi -f --profile erofs-lz4,phosh,embedded-firmware,precompile-akmods
+          sudo mkosi -f --profile erofs-lz4,phosh,embedded-firmware,precompile-akmods,ostree
 
-      - name: Upload build artifacts
+      - name: Upload image.ero
         uses: actions/upload-artifact@v4
         with:
           name: live-pocket-fedora
           path: ./mkosi.output/image.ero
+
+      - name: Upload ostree
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-pocket-fedora
+          path: ./mkosi.output/ostree
