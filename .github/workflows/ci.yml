@@ -32,7 +32,7 @@ jobs:
           name: live-pocket-fedora
           path: mkosi.output/
 
-      - name: Upload ostree.ero to R2
+      - name: Upload live-pocket-fedora.ero to R2
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
@@ -45,7 +45,7 @@ jobs:
           aws s3api put-object \
             --bucket "${R2_BUCKET}" \
             --key "${object_key}" \
-            --body "mkosi.output/ostree.ero" \
+            --body "mkosi.output/live-pocket-fedora.ero" \
             --content-type "application/octet-stream" \
             --endpoint-url "${R2_ENDPOINT_URL}"
 

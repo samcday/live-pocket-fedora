@@ -20,9 +20,26 @@ jobs:
         run: |
           sudo mkosi -f --profile erofs-lz4,phosh,embedded-firmware,precompile-akmods,ostree
 
+      - name: Normalize .ero artifact filename
+        run: |
+          shopt -s nullglob
+          ero_files=(./mkosi.output/*.ero)
+
+          if [ "${#ero_files[@]}" -eq 0 ]; then
+            echo "No .ero artifact found in ./mkosi.output"
+            exit 1
+          fi
+
+          source_file="${ero_files[0]}"
+          target_file="./mkosi.output/live-pocket-fedora.ero"
+
+          if [ "${source_file}" != "${target_file}" ]; then
+            cp "${source_file}" "${target_file}"
+          fi
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: live-pocket-fedora
           path: |
-            ./mkosi.output/ostree.ero
+            ./mkosi.output/live-pocket-fedora.ero
