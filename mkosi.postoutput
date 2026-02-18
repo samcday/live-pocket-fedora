@@ -13,6 +13,11 @@ if [[ "${PROFILES:-}" == *"erofs-lz4"* ]]; then
     compress=-zlz4
 fi
 
+if [[ "${PROFILES:-}" == *"ostree"* ]]; then
+    echo "ostree profile enabled, skipping mkosi.output/image.ero generation"
+    exit 0
+fi
+
 # fragdedupe not supported on ubuntu 24.04
 # extraopts="-Eall-fragments,fragdedupe=inode"
 extraopts="-Eall-fragments,dedupe,fragments"

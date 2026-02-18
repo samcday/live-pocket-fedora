@@ -20,14 +20,11 @@ jobs:
         run: |
           sudo mkosi -f --profile erofs-lz4,phosh,embedded-firmware,precompile-akmods,ostree
 
-      - name: Upload image.ero
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: live-pocket-fedora
-          path: ./mkosi.output/image.ero
-
-      - name: Upload ostree
-        uses: actions/upload-artifact@v4
-        with:
-          name: live-pocket-fedora
-          path: ./mkosi.output/ostree
+          path: |
+            ./mkosi.output/ostree.ero
+            ./mkosi.output/ostree
+          if-no-files-found: error

@@ -34,6 +34,18 @@ fi
 ref="${OSTREE_REF:-live-pocket-fedora/${release}/${architecture}}"
 stateroot="${OSTREE_STATEROOT:-live-pocket-fedora}"
 
+compress=
+
+if [[ "${PROFILES:-}" == *"erofs-lzma"* ]]; then
+    compress=-zlzma
+fi
+if [[ "${PROFILES:-}" == *"erofs-zstd"* ]]; then
+    compress=-zzstd
+fi
+if [[ "${PROFILES:-}" == *"erofs-lz4"* ]]; then
+    compress=-zlz4
+fi
+
 if [[ ! -d "$image_dir" ]]; then
     echo "Missing image tree at $image_dir." >&2
     exit 1
@@ -118,3 +130,16 @@ cat > "$ostree_root/metadata.json" <<EOF
   "ostree_karg_file": "ostree-karg.txt"
 }
 EOF
+
+if [[ -n "$compress" ]]; then
+    mkfs_opts=(-C 1048576 "$compress")
+
+    time mkfs.erofs "${mkfs_opts[@]}" "$OUTPUTDIR/ostree.ero" "$sysroot_dir/"
+
+    chmod a+r "$OUTPUTDIR/ostree.ero"
+
+    du -hs "$sysroot_dir"
+    du -hs "$OUTPUTDIR/ostree.ero"
+fi
+
+chmod -R -f go+rX "$ostree_root"
